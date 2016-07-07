@@ -4,6 +4,7 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
 import java.net.URL;
 import java.net.URLConnection;
 
@@ -12,16 +13,18 @@ import java.net.URLConnection;
  */
 public class WebChecker {
 
-    public void getResponse(String urlString, String content) throws IOException {
+    public void getResponse(String urlString, String content, int timeout) throws IOException {
+        System.out.println("Getting response from web page");
         URL url = new URL(urlString);
-        URLConnection con = url.openConnection();
+        HttpURLConnection con = (HttpURLConnection) url.openConnection();
+        con.setConnectTimeout(timeout);
         InputStream is = con.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
         checkResponse(br, content);
     }
 
     private void checkResponse(BufferedReader br, String content) throws IOException {
-
+        System.out.println("Checking response from web page");
         boolean correctContent = false;
 
         String line;
@@ -40,4 +43,5 @@ public class WebChecker {
 
         br.close();
     }
+
 }

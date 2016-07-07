@@ -20,8 +20,9 @@ public class Controller {
         String url = URLField.getText();
         String content = ContentField.getText();
         Long period = Long.parseLong(IntervalField.getText())*1000;
+        Double timeout = Double.parseDouble(MaxResponseTimeField.getText())*1000;
 
-        timer.scheduleAtFixedRate(new ResponseCheckerTask(url, content), 0, period);
+        timer.scheduleAtFixedRate(new ResponseCheckerTask(url, content, timeout.intValue()), 0, period);
     }
 
 }
