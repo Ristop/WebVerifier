@@ -21,10 +21,23 @@ public class WebChecker {
     }
 
     private void checkResponse(BufferedReader br, String content) throws IOException {
+
+        boolean correctContent = false;
+
         String line;
         while ((line = br.readLine()) != null){
-            System.out.println(line);
+            if (line.contains(content)){
+                correctContent = true;
+                break;
+            }
         }
+
+        if (correctContent){
+            System.out.println("Veebileht töötab!");
+        } else {
+            System.out.println("Veebileht ei tööta!");
+        }
+
         br.close();
     }
 }
