@@ -11,26 +11,20 @@ import java.net.URLConnection;
  * Created by Risto on 7/7/2016.
  */
 public class WebChecker {
-    public static void main(String[] args) throws IOException {
-        String link = "https://www.oracle.com/index.html";
-        try {
-            getResponse(link);
-        }catch (Exception e){
-            e.printStackTrace();
-        }
-    }
 
-    public static void getResponse(String urlString) throws IOException {
+    public void getResponse(String urlString, String content) throws IOException {
         URL url = new URL(urlString);
         URLConnection con = url.openConnection();
         InputStream is = con.getInputStream();
         BufferedReader br = new BufferedReader(new InputStreamReader(is));
+        checkResponse(br, content);
+    }
 
+    private void checkResponse(BufferedReader br, String content) throws IOException {
         String line;
         while ((line = br.readLine()) != null){
             System.out.println(line);
         }
-
         br.close();
     }
 }
