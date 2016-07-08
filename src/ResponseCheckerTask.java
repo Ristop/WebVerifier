@@ -19,9 +19,9 @@ public class ResponseCheckerTask extends TimerTask {
     private int timeout;
     private ArrayList<Integer> alertConditions;
     private String cellNumber;
-    private TextArea logArea;
+    private Log log;
 
-    private int connectionFailures = 0;
+    private int connectionFailures;
 
     public ResponseCheckerTask(String url, String content, int timeout, ArrayList<Integer> alertConditions, String cellNumber, TextArea logArea) {
         this.url = url;
@@ -29,7 +29,9 @@ public class ResponseCheckerTask extends TimerTask {
         this.timeout = timeout;
         this.alertConditions = alertConditions;
         this.cellNumber = cellNumber;
-        this.logArea = logArea;
+        this.log = new Log(logArea);
+
+        this.connectionFailures = 0;
     }
 
     @Override
@@ -49,14 +51,19 @@ public class ResponseCheckerTask extends TimerTask {
 
         InputStream is;
         try {
+            int responseCode;
             long startTime = System.nanoTime();
-            is = con.getInputStream();
+            responseCode = con.getResponseCode();
             Double endTime = ((Double) ((System.nanoTime() - startTime) / 10000000.0)).intValue() / 100.0;
-            BufferedReader br = new BufferedReader(new InputStreamReader(is));
-            checkResponseContent(br, endTime);
+            if (responseCode == 200){
+                is = con.getInputStream();
+                BufferedReader br = new BufferedReader(new InputStreamReader(is));
+                checkResponseContent(br, endTime);
+            }
         } catch (IOException e) {
-            logArea.appendText("request to " + this.url + " - timeout");
+            log.write("request to " + this.url + " - timeout" + "\n");
             addFailure();
+            e.printStackTrace();
         }
 
     }
@@ -73,10 +80,10 @@ public class ResponseCheckerTask extends TimerTask {
         }
 
         if (correctContent) {
-            logArea.appendText("request to " + url + " - returned 200 in " + endTime + " ns\n");
+            log.write("request to " + url + " - returned 200 in " + endTime + " s\n");
             connectionFailures = 0;
         } else {
-            logArea.appendText("request to " + url + " - returned 200 but did not include required string: " + this.content);
+            log.write("request to " + url + " - returned 200 - invalid response\n");
             addFailure();
         }
 
@@ -86,9 +93,7 @@ public class ResponseCheckerTask extends TimerTask {
     private void addFailure() {
         connectionFailures++;
         if (alertConditions.contains(connectionFailures)){
-            logArea.appendText(" - sending out SMS alert to " + this.cellNumber + "\n");
-        } else {
-            logArea.appendText("\n");
+            log.write("Sending out SMS alert to " + this.cellNumber + "\n");
         }
     }
 }

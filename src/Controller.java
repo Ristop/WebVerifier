@@ -3,6 +3,7 @@ import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -44,7 +45,7 @@ public class Controller {
                 Double timeout = Double.parseDouble(MaxResponseTimeField.getText()) * 1000;
                 String cellnumber = CellNumberField.getText();
 
-                timer.scheduleAtFixedRate(new ResponseCheckerTask(url, content, timeout.intValue(), logArea, alertConditions, cellnumber), 0, period);
+                timer.scheduleAtFixedRate(new ResponseCheckerTask(url, content, timeout.intValue(), alertConditions, cellnumber, logArea), 0, period);
 
                 StartButton.setText("Stop");
                 checking = true;
