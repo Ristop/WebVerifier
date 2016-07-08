@@ -8,14 +8,21 @@
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
 
-<Pane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
-   <children>
-      <TextField fx:id="URLField" layoutX="166.0" layoutY="121.0" prefHeight="25.0" prefWidth="268.0" promptText="URL" />
-      <TextField fx:id="ContentField" layoutX="166.0" layoutY="153.0" prefHeight="25.0" prefWidth="268.0" promptText="Content to check" />
-      <Button fx:id="StartButton" layoutX="253.0" layoutY="314.0" mnemonicParsing="false" onAction="#startChecking" prefHeight="25.0" prefWidth="95.0" text="Start" />
-      <TextField fx:id="IntervalField" layoutX="166.0" layoutY="186.0" prefHeight="25.0" prefWidth="127.0" promptText="Interval" />
-      <TextField fx:id="MaxResponseTimeField" layoutX="307.0" layoutY="186.0" prefHeight="25.0" prefWidth="127.0" promptText="req response time" />
-      <TextField fx:id="MessageSendOutTimesField" layoutX="166.0" layoutY="220.0" prefHeight="25.0" prefWidth="268.0" promptText="When to send message (ex : 5, 6, 8)" />
-      <TextField fx:id="CellNumberField" layoutX="166.0" layoutY="254.0" prefHeight="25.0" prefWidth="268.0" promptText="Cell number" />
-   </children>
-</Pane>
+<SplitPane dividerPositions="0.6256281407035176" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" orientation="VERTICAL" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/8" xmlns:fx="http://javafx.com/fxml/1" fx:controller="Controller">
+  <items>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="250.0" prefWidth="598.0">
+         <children>
+            <TextField fx:id="URLField" layoutX="165.0" layoutY="29.0" prefHeight="25.0" prefWidth="268.0" promptText="URL" style="-fx-border-color: gray;" text="http://www.delfi.ee" />
+            <TextField fx:id="ContentField" layoutX="165.0" layoutY="62.0" prefHeight="25.0" prefWidth="268.0" promptText="Content to check" style="-fx-border-color: gray;" text="uudised" />
+            <TextField fx:id="IntervalField" layoutX="165.0" layoutY="100.0" prefHeight="25.0" prefWidth="127.0" promptText="Interval" style="-fx-border-color: gray;" text="2" />
+            <TextField fx:id="MaxResponseTimeField" layoutX="306.0" layoutY="100.0" prefHeight="25.0" prefWidth="127.0" promptText="max response time" style="-fx-border-color: gray;" text="0.5" />
+            <TextField fx:id="MessageSendOutTimesField" layoutX="165.0" layoutY="136.0" prefHeight="25.0" prefWidth="268.0" promptText="When to send message (ex : 5, 6, 8)" style="-fx-border-color: gray;" />
+            <TextField fx:id="CellNumberField" layoutX="165.0" layoutY="168.0" prefHeight="25.0" prefWidth="268.0" promptText="Cell number" style="-fx-border-color: gray;" />
+            <Button fx:id="StartButton" layoutX="259.0" layoutY="200.0" mnemonicParsing="false" onAction="#startChecking" prefHeight="25.0" prefWidth="95.0" text="Start" />
+         </children></AnchorPane>
+    <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="598.0">
+         <children>
+            <TextArea fx:id="logArea" editable="false" layoutX="199.0" layoutY="-27.0" prefHeight="146.0" prefWidth="598.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+         </children></AnchorPane>
+  </items>
+</SplitPane>
