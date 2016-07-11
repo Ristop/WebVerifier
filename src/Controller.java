@@ -1,34 +1,25 @@
-
 import javafx.fxml.FXML;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
-import javafx.scene.text.TextFlow;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Timer;
+import java.util.stream.Collectors;
 
 public class Controller {
-    @FXML
-    private TextField URLField;
-    @FXML
-    private TextField ContentField;
-    @FXML
-    private TextField IntervalField;
-    @FXML
-    private TextField MaxResponseTimeField;
-    @FXML
-    private TextField MessageSendOutTimesField;
-    @FXML
-    private TextField CellNumberField;
+    @FXML private TextField URLField;
+    @FXML private TextField ContentField;
+    @FXML private TextField IntervalField;
+    @FXML private TextField MaxResponseTimeField;
+    @FXML private TextField MessageSendOutTimesField;
+    @FXML private TextField CellNumberField;
 
-    @FXML
-    private Button StartButton;
+    @FXML private Button StartButton;
 
-    @FXML
-    private TextArea logArea;
+    @FXML private TextArea logArea;
 
     private boolean checking = false;
     private ArrayList<Integer> alertConditions = new ArrayList<>();
@@ -39,20 +30,26 @@ public class Controller {
         if (!checking) {
             if (validateFields()){
                 timer = new Timer();
+
+                // Getting information from fields
                 String url = URLField.getText();
                 String content = ContentField.getText();
                 Long period = Long.parseLong(IntervalField.getText()) * 1000;
                 Double timeout = Double.parseDouble(MaxResponseTimeField.getText()) * 1000;
-                String cellnumber = CellNumberField.getText();
+                String phoneNumber = CellNumberField.getText();
 
-                timer.scheduleAtFixedRate(new ResponseCheckerTask(url, content, timeout.intValue(), alertConditions, cellnumber, logArea), 0, period);
+                // Start scheduled task
+                timer.scheduleAtFixedRate(new ResponseCheckerTask(url, content, timeout.intValue(), alertConditions, phoneNumber, logArea), 0, period);
 
+                // Reset variables
                 StartButton.setText("Stop");
                 checking = true;
             }
-        } else {
+        } else { // Stop Checking
             timer.cancel();
             timer.purge();
+
+            // Reset variables
             checking = false;
             StartButton.setText("Start");
         }
@@ -60,6 +57,8 @@ public class Controller {
 
     private boolean validateFields() {
         boolean validated = true;
+
+        // URL validation
         if (!URLField.getText().startsWith("http://")) {
             URLField.setStyle("-fx-border-color: red;");
             validated = false;
@@ -67,6 +66,7 @@ public class Controller {
             URLField.setStyle("-fx-border-color: gray;");
         }
 
+        // Interval validation
         try {
             Long.parseLong(IntervalField.getText());
             IntervalField.setStyle("-fx-border-color: gray;");
@@ -75,6 +75,7 @@ public class Controller {
             validated = false;
         }
 
+        // Response time validation
         try {
             Double.parseDouble(MaxResponseTimeField.getText());
             MaxResponseTimeField.setStyle("-fx-border-color: gray;");
@@ -83,13 +84,14 @@ public class Controller {
             validated = false;
         }
 
+        // Alert message times validation
         try{
             String messageSendOutTimesString = MessageSendOutTimesField.getText().replace(" ", "");
             String[] split = messageSendOutTimesString.split(",");
             List<String> times = new ArrayList<>(Arrays.asList(split));
-            for (String time : times) {
-                alertConditions.add(Integer.parseInt(time));
-            }
+            
+            alertConditions.addAll(times.stream().map(Integer::parseInt).collect(Collectors.toList()));
+            
             MessageSendOutTimesField.setStyle("-fx-border-color: gray;");
         } catch (Exception e){
             MessageSendOutTimesField.setStyle("-fx-border-color: red;");
