@@ -66,35 +66,49 @@ public class Controller {
             URLField.setStyle("-fx-border-color: gray;");
         }
 
-        // Interval validation
-        try {
-            Long.parseLong(IntervalField.getText());
-            IntervalField.setStyle("-fx-border-color: gray;");
-        }catch (Exception e){
-            IntervalField.setStyle("-fx-border-color: red;");
-            validated = false;
+        // Interval. If the interval is not set, set it to 2
+        if (!IntervalField.getText().equals("")){
+            try {
+                Long.parseLong(IntervalField.getText());
+                IntervalField.setStyle("-fx-border-color: gray;");
+            }catch (Exception e){
+                IntervalField.setStyle("-fx-border-color: red;");
+                validated = false;
+            }
+        } else {
+            IntervalField.setText("2");
         }
 
-        // Response time validation
-        try {
-            Double.parseDouble(MaxResponseTimeField.getText());
-            MaxResponseTimeField.setStyle("-fx-border-color: gray;");
-        }catch (Exception e){
-            MaxResponseTimeField.setStyle("-fx-border-color: red;");
-            validated = false;
+        // Response time validation. If the time is not set, set it to 0.5
+        if (!MaxResponseTimeField.getText().equals("")){
+            try {
+                Double.parseDouble(MaxResponseTimeField.getText());
+                MaxResponseTimeField.setStyle("-fx-border-color: gray;");
+            }catch (Exception e){
+                MaxResponseTimeField.setStyle("-fx-border-color: red;");
+                validated = false;
+            }
+        } else {
+            MaxResponseTimeField.setText("0.5");
         }
 
-        // Alert message times validation
-        try{
-            String messageSendOutTimesString = MessageSendOutTimesField.getText().replace(" ", "");
-            String[] split = messageSendOutTimesString.split(",");
-            List<String> times = new ArrayList<>(Arrays.asList(split));
-            
-            alertConditions.addAll(times.stream().map(Integer::parseInt).collect(Collectors.toList()));
-            
-            MessageSendOutTimesField.setStyle("-fx-border-color: gray;");
-        } catch (Exception e){
-            MessageSendOutTimesField.setStyle("-fx-border-color: red;");
+        // Alert message times validation. If the field is not set, set it to [4, 10]
+        if (!MessageSendOutTimesField.getText().equals("")){
+            try{
+                String messageSendOutTimesString = MessageSendOutTimesField.getText().replace(" ", "");
+                String[] split = messageSendOutTimesString.split(",");
+                List<String> times = new ArrayList<>(Arrays.asList(split));
+
+                alertConditions.addAll(times.stream().map(Integer::parseInt).collect(Collectors.toList()));
+
+                MessageSendOutTimesField.setStyle("-fx-border-color: gray;");
+            } catch (Exception e){
+                MessageSendOutTimesField.setStyle("-fx-border-color: red;");
+            }
+        } else {
+            MessageSendOutTimesField.setText("4, 10");
+            alertConditions.add(4);
+            alertConditions.add(10);
         }
 
         return validated;
