@@ -4,13 +4,12 @@ import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
 
-import java.io.File;
 
 public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) throws Exception{
-        Parent root = FXMLLoader.load(new File("res/gui.fxml").toURI().toURL());
+        Parent root = FXMLLoader.load(getClass().getResource("/gui.fxml"));
         primaryStage.setTitle("WebVerifier");
         primaryStage.setScene(new Scene(root, 600, 400));
         primaryStage.setResizable(false);
