@@ -15,7 +15,11 @@ public class Log {
         this.logArea = logArea;
     }
 
-    public void write(String text){
+    public void writeWithTimestamp(String text){
         logArea.appendText("[" + new SimpleDateFormat("MM/dd/yyyy HH:mm:ss").format(new Date()) + "] " + text);
+    }
+
+    public void write(String text){
+        logArea.appendText(text);
     }
 }

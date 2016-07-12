@@ -17,8 +17,8 @@
             <TextField fx:id="ContentField" layoutX="165.0" layoutY="62.0" prefHeight="25.0" prefWidth="268.0" promptText="Content to check" style="-fx-border-color: gray;" text="uudised" />
             <TextField fx:id="IntervalField" layoutX="165.0" layoutY="100.0" prefHeight="25.0" prefWidth="127.0" promptText="Interval" style="-fx-border-color: gray;" text="2" />
             <TextField fx:id="MaxResponseTimeField" layoutX="306.0" layoutY="100.0" prefHeight="25.0" prefWidth="127.0" promptText="max response time" style="-fx-border-color: gray;" text="0.5" />
-            <TextField fx:id="MessageSendOutTimesField" layoutX="165.0" layoutY="136.0" prefHeight="25.0" prefWidth="268.0" promptText="When to send message (ex : 5, 6, 8)" style="-fx-border-color: gray;" />
-            <TextField fx:id="CellNumberField" layoutX="165.0" layoutY="168.0" prefHeight="25.0" prefWidth="268.0" promptText="Cell number" style="-fx-border-color: gray;" />
+            <TextField fx:id="MessageSendOutTimesField" layoutX="165.0" layoutY="136.0" prefHeight="25.0" prefWidth="268.0" promptText="When to send message (ex : 5, 6, 8)" style="-fx-border-color: gray;" text="4, 10" />
+            <TextField fx:id="CellNumberField" layoutX="165.0" layoutY="168.0" prefHeight="25.0" prefWidth="268.0" promptText="Cell number" style="-fx-border-color: gray;" text="+37256676750" />
             <Button fx:id="StartButton" layoutX="259.0" layoutY="200.0" mnemonicParsing="false" onAction="#startChecking" prefHeight="25.0" prefWidth="95.0" text="Start" />
          </children></AnchorPane>
     <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="184.0" prefWidth="598.0">

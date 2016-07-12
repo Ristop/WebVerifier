@@ -20,8 +20,12 @@ public class ResponseCheckerTask extends TimerTask {
     private ArrayList<Integer> alertConditions;
     private String cellNumber;
     private Log log;
+    private SMSSender smsSender;
 
     private int connectionFailures;
+
+    private String logText;
+    private String requestInfoText;
 
     public ResponseCheckerTask(String url, String content, int timeout, ArrayList<Integer> alertConditions,
                                String cellNumber, TextArea logArea) {
@@ -32,6 +36,8 @@ public class ResponseCheckerTask extends TimerTask {
         this.cellNumber = cellNumber;
         this.log = new Log(logArea);
 
+        this.logText = "request to " + this.url + " - ";
+        this.smsSender = new SMSSender(cellNumber);
         this.connectionFailures = 0;
     }
 
@@ -60,20 +66,24 @@ public class ResponseCheckerTask extends TimerTask {
                 checkResponseContent(br, endTime);
             }
         } catch (SocketTimeoutException e) {
-            log.write("request to " + this.url + " - timeout" + "\n");
+            this.requestInfoText = "timeout";
+            log.writeWithTimestamp(this.logText + this.requestInfoText);
             addFailure();
-            e.printStackTrace();
         } catch (IOException e) {
-            log.write("request to " + this.url + " - connection failed" + "\n");
+            this.requestInfoText = "connection failed";
+            log.writeWithTimestamp(this.logText + this.requestInfoText);
             addFailure();
-            e.printStackTrace();
         }
 
     }
 
+    /*
+    * Checks if the content of the web page includes required string
+    */
     private void checkResponseContent(BufferedReader br, double endTime) throws IOException {
         boolean correctContent = false;
 
+        // Check the content line by line
         String line;
         while ((line = br.readLine()) != null) {
             if (line.contains(this.content)) {
@@ -82,26 +92,36 @@ public class ResponseCheckerTask extends TimerTask {
             }
         }
 
-        if (correctContent) {
-            log.write("request to " + url + " - returned 200 in " + endTime + " s\n");
-            connectionFailures = 0;
-        } else {
-            log.write("request to " + url + " - returned 200 - invalid response\n");
+        if (correctContent) { // Request successful
+            this.requestInfoText = "returned 200 in " + endTime + " s";
+            log.writeWithTimestamp(this.logText + this.requestInfoText + "\n");
+            if (connectionFailures != 0){
+                connectionFailures = 0;
+                sendAlert("Site " + this.url + " up!");
+            }
+        } else { // Returned 200 but the content was invalid
+            this.requestInfoText = "invalid content";
+            log.writeWithTimestamp(this.logText + this.requestInfoText);
             addFailure();
         }
 
         br.close();
     }
 
+    /*
+    * Adds one failure to the counter and checks if it needs to send out an alert message.
+    */
     private void addFailure() {
         connectionFailures++;
         if (alertConditions.contains(connectionFailures)) {
-            log.write("Sending out SMS alert to " + this.cellNumber + "\n");
-            sendAlert();
+            log.write(" - sending out SMS alert to " + this.cellNumber + "\n");
+            sendAlert("Site " + this.url + " down! Reason: " + this.requestInfoText);
+        } else {
+            log.write("\n");
         }
     }
 
-    private void sendAlert(){
-        // TODO: 7/11/2016 sending alert messages
+    private void sendAlert(String alertText){
+        this.smsSender.send(alertText);
     }
 }
